@@ -7,6 +7,7 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 const app = express();
 
+
 //middleware
 app.use(cors());
 app.use(express.json());
@@ -21,6 +22,7 @@ async function run() {
     try {
         await client.connect();
         const serviceCollection = client.db('geniusCar').collection('service');
+        const orderCollection = client.db('geniusCar').collection('order')
         //sb user k neuar jonno
         app.get('/service', async (req, res) => {
             const query = {};
@@ -50,6 +52,15 @@ async function run() {
             const result = await serviceCollection.deleteOne(query)
             res.send(result);
         })
+
+        //Order collection api
+
+        app.post('/order', async (req, res) => {
+            const order = req.body
+            const result = await orderCollection.insertOne(order)
+            res.send(result);
+        })
+
 
     }
     finally {
